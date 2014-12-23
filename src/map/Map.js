@@ -45,6 +45,7 @@ L.Map = L.Evented.extend({
 		this._layers = {};
 		this._zoomBoundLayers = {};
 		this._sizeChanged = true;
+		this._rotation = 0;
 
 		this.callInitHooks();
 
@@ -59,6 +60,15 @@ L.Map = L.Evented.extend({
 		zoom = zoom === undefined ? this.getZoom() : zoom;
 		this._resetView(L.latLng(center), this._limitZoom(zoom));
 		return this;
+	},
+
+	rotate: function (rotation) {
+		this._rotation = rotation;
+		return this.setView(this.getCenter(), this.getZoom(), {});
+	},
+
+	getRotation: function () {
+		return this._rotation;
 	},
 
 	setZoom: function (zoom, options) {

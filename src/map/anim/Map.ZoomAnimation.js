@@ -34,13 +34,27 @@ L.Map.include(!zoomAnimated ? {} : {
 		this._panes.mapPane.appendChild(proxy);
 
 		this.on('zoomanim', function (e) {
-			L.DomUtil.setTransform(proxy, this.project(e.center, e.zoom), this.getZoomScale(e.zoom, 1));
+			var T = new L.Transform(),
+				c = this.project(e.center, e.zoom),
+				sc = this.getZoomScale(e.zoom, 1);
+			T.translate(c.x, c.y)
+			 .scale(sc ,sc)
+			 .rotate(this._rotation, c);
+
+			L.DomUtil.setTransform(proxy, T);
+			// L.DomUtil.setTransform(proxy, this.project(e.center, e.zoom), this.getZoomScale(e.zoom, 1));
 		}, this);
 
 		this.on('load moveend', function () {
 			var c = this.getCenter(),
-				z = this.getZoom();
-			L.DomUtil.setTransform(proxy, this.project(c, z), this.getZoomScale(z, 1));
+				z = this.getZoom(),
+				sc = this.getZoomScale(z, 1),
+				T = new L.Transform();
+			T.translate(c.x, c.y)
+			 .scale(sc, sc)
+			 .rotate(this._rotation, c);
+			L.DomUtil.setTransform(proxy, T);
+			// L.DomUtil.setTransform(proxy, this.project(c, z), this.getZoomScale(z, 1));
 		}, this);
 	},
 

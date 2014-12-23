@@ -137,10 +137,21 @@ L.DomUtil = {
 	},
 
 	setTransform: function (el, offset, scale) {
-		var pos = offset || new L.Point(0, 0);
-
-		el.style[L.DomUtil.TRANSFORM] =
-			'translate3d(' + pos.x + 'px,' + pos.y + 'px' + ',0)' + (scale ? ' scale(' + scale + ')' : '');
+		if(offset instanceof L.Transform){
+			el.style[L.DomUtil.TRANSFORM] = offset.toString3D();
+		}
+		else{
+			var pos = offset || new L.Point(0, 0),
+				T = new L.Transform();
+			T.translate(pos.x, pos.y);
+			if(scale){
+				T.scale(scale, scale, pos);
+			}
+			// console.log(pos.x, pos.y, scale, T.toString());
+			el.style[L.DomUtil.TRANSFORM] = T.toString3D();
+			// el.style[L.DomUtil.TRANSFORM] =
+			// 	'translate3d(' + pos.x + 'px,' + pos.y + 'px' + ',0)' + (scale ? ' scale(' + scale + ')' : '');
+		}
 	},
 
 	setPosition: function (el, point, no3d) { // (HTMLElement, Point[, Boolean])
